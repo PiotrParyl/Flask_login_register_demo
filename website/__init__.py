@@ -1,17 +1,18 @@
 from flask import Flask, render_template
 import mysql.connector
+from .settings import Setings
+import pandas as pd
 
-host="178.79.191.194"
-user="maczo_all"
-passwd="Pomidor123!@#"
-database="webfiszki_db"
 
 db = mysql.connector.connect(
-    host= host,
-    user=user,
-    passwd=passwd,
-    database=database,
+    host= Setings.host,
+    user=Setings.user,
+    passwd=Setings.passwd,
+    database=Setings.database,
 )
+df = pd.read_sql_query("SELECT * FROM Users",db,index_col="email")
+df2 = pd.read_sql_query("SELECT * FROM Users",db)
+
 
 def create_app():
     app = Flask(__name__)
@@ -28,5 +29,13 @@ def create_app():
 #=============================================== Funktions
 
 
-def email_check(db):
-    pass
+def check_emial(email):
+    x = df2['email'].tolist()
+
+    return x
+
+
+def check_pass(email):
+    x = df.loc[f'{email}'].loc['password']
+
+    return x
